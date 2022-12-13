@@ -1,0 +1,22 @@
+[serial]
+# The path to the serial device
+device = "${DEVICE_PATH}"
+
+# The baudrate of the serial connection (defaults to 115200)
+baudrate = ${DEVICE_BAUDS}
+
+
+[udp]
+# The UDP port to listen on for incoming packets
+listen = "${UDP_LISTEN}"
+
+# The UDP port to send the serial device's output to (optional; if omitted, nothing is sent)
+${UDP_SEND_TEMPLATE}
+
+# The TTL for outgoing UDP packets (defaults to 0)
+${UDP_TTL_TEMPLATE}
+
+
+[log]
+# Whether to log the serial device's I/O to stdout (defaults to false)
+enabled = true

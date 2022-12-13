@@ -1,0 +1,11 @@
+services:
+  serial-server:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    environment:
+      DEVICE_PATH: /dev/ttyUSB0
+      DEVICE_BAUDS: "115200"
+      UDP_LISTEN: "0.0.0.0:2323"
+      #UDP_SEND: "224.0.0.1:2323"
+      #UDP_TTL: 0
