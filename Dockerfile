@@ -1,17 +1,23 @@
 # Build the daemon
-FROM ghcr.io/kizzycode/buildbase-rust:tumbleweed AS buildenv
+FROM ghcr.io/kizzycode/buildbase-rust:ubuntu AS buildenv
 
-RUN mv /root/.cargo /root/.cargo-tmp
+RUN mv /root/.cargo /root/.cargo-persistent
 RUN --mount=type=tmpfs,target=/root/.cargo \
-    cp -r /root/.cargo-tmp/* /root/.cargo \
-    && cargo install --git https://github.com/KizzyCode/SerialServer-rust --branch bug/linux-compat \
+    cp -a /root/.cargo-persistent/. /root/.cargo \
+    && /root/.cargo/bin/cargo install --git https://github.com/KizzyCode/SerialServer-rust --branch bug/linux-compat \
     && cp /root/.cargo/bin/serial-server /root/serial-server
 
 
 # Build the real container
-FROM opensuse/tumbleweed:latest
+FROM ubuntu:latest
 
-RUN zypper install --no-confirm gettext
+ENV APT_PACKAGES build-essential curl git
+ENV DEBIAN_FRONTEND gettext
+RUN apt-get update \
+    && apt-get upgrade --yes \
+    && apt-get install --yes ${APT_PACKAGES} \
+    && apt-get autoremove --yes \
+    && apt-get clean
 
 COPY --from=buildenv /root/serial-server /usr/local/bin/serial-server
 COPY ./files/serial-server.toml.template /etc/serial-server.toml.template
