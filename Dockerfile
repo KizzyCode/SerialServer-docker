@@ -11,8 +11,8 @@ RUN --mount=type=tmpfs,target=/root/.cargo \
 # Build the real container
 FROM ubuntu:latest
 
-ENV APT_PACKAGES build-essential curl git
-ENV DEBIAN_FRONTEND gettext
+ENV APT_PACKAGES gettext
+ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update \
     && apt-get upgrade --yes \
     && apt-get install --yes ${APT_PACKAGES} \
